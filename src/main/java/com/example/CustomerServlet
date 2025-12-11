@@ -2,7 +2,6 @@ package com.example;
 
 import entity.Customer;
 import entity.CustomerDAO;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -46,13 +45,15 @@ public class CustomerServlet extends HttpServlet {
         // Simple “create” operation
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
+        String favoriteMeal = request.getParameter("favoriteMeal");
 
-        if (firstName != null && lastName != null
+        if (firstName != null && lastName != null && favoriteMeal != null
                 && !firstName.isBlank() && !lastName.isBlank()) {
 
             Customer c = new Customer();
             c.setFirstName(firstName);
             c.setLastName(lastName);
+            c.setFavoriteMeal(favoriteMeal);
 
             customerDAO.insert(c);    // uses your existing DAO
         }
