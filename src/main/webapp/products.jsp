@@ -35,7 +35,7 @@
 <h2>Add New Product</h2>
 <form action="${pageContext.request.contextPath}/products" method="post">
     <label>Name:
-        <input type="text" name="name" required />
+        <input type="text" name="name"/>
     </label><br/><br/>
 
     <label>Description:
