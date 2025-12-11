@@ -14,20 +14,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 /**
  *
  * @author Gokhan
  */
 public class CustomerDAO implements DAO<Customer>
-{
+{   
     public CustomerDAO() {
-
+        
     }
     List<Customer> customers;
     /**
      * Get a single customer entity as a customer object
      * @param id
-     * @return
+     * @return 
      */
     @Override
     public Optional<Customer> get(int id) {
@@ -40,7 +41,7 @@ public class CustomerDAO implements DAO<Customer>
             rs = stmt.executeQuery();
             Customer customer = null;
             while (rs.next()) {
-                customer = new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_First_Name"), rs.getString("Customer_Last_Name"));
+                customer = new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_First_Name"), rs.getString("Customer_Last_Name"), rs.getString("Customer_Favorite_Meal"));
             }
             return Optional.ofNullable(customer);
         } catch (SQLException ex) {
@@ -51,10 +52,10 @@ public class CustomerDAO implements DAO<Customer>
             return null;
         }
     }
-
+    
     /**
      * Get all customer entities as a List
-     * @return
+     * @return 
      */
     @Override
     public List<Customer> getAll() {
@@ -66,7 +67,7 @@ public class CustomerDAO implements DAO<Customer>
             rs = db.executeQuery(sql);
             Customer customer = null;
             while (rs.next()) {
-                customer = new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_First_Name"), rs.getString("Customer_Last_Name"));
+                customer = new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_First_Name"), rs.getString("Customer_Last_Name"), rs.getString("Customer_Favorite_Meal"));
                 customers.add(customer);
             }
             return customers;
@@ -75,10 +76,10 @@ public class CustomerDAO implements DAO<Customer>
             return null;
         }
     }
-
+    
     /**
      * Insert a customer object into customer table
-     * @param customer
+     * @param customer 
      */
     @Override
     public void insert(Customer customer)
@@ -90,6 +91,7 @@ public class CustomerDAO implements DAO<Customer>
             stmt.setInt(1, customer.getID());
             stmt.setString(2, customer.getFirstName());
             stmt.setString(3, customer.getLastName());
+            stmt.setString(4, customer.getFavoriteMeal());
             int rowInserted = stmt.executeUpdate();
             if (rowInserted > 0) {
                 System.out.println("A new customer was inserted successfully!");
@@ -98,7 +100,7 @@ public class CustomerDAO implements DAO<Customer>
             System.err.println(ex.toString());
         }
     }
-
+    
     /**
      * Update a customer entity in database if it exists using a customer object
      * @param customer
@@ -111,6 +113,7 @@ public class CustomerDAO implements DAO<Customer>
             PreparedStatement stmt = db.getPreparedStatement(sql);
             stmt.setString(1, customer.getFirstName());
             stmt.setString(2, customer.getLastName());
+            stmt.setString(3, customer.getFavoriteMeal());
             stmt.setInt(4, customer.getID());
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
@@ -120,10 +123,10 @@ public class CustomerDAO implements DAO<Customer>
             System.err.println(ex.toString());
         }
     }
-
+    
     /**
      * Delete a customer from customer table if the entity exists
-     * @param customer
+     * @param customer 
      */
     @Override
     public void delete(Customer customer) {
@@ -140,10 +143,10 @@ public class CustomerDAO implements DAO<Customer>
             System.err.println(ex.toString());
         }
     }
-
+    
     /**
      * Get all column names in a list array
-     * @return
+     * @return 
      */
     @Override
     public List<String> getColumnNames() {
@@ -163,6 +166,6 @@ public class CustomerDAO implements DAO<Customer>
         } catch (SQLException ex) {
             System.err.println(ex.toString());
             return null;
-        }
+        } 
     }
 }
