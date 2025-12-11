@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/product")
+@WebServlet("/products")
 public class ProductServlet extends HttpServlet {
 
     private ProductDAO productDAO;
@@ -34,7 +34,7 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("product", product);
 
         // Forward to JSP
-        RequestDispatcher rd = request.getRequestDispatcher("/product.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/products.jsp");
         rd.forward(request, response);
     }
 
@@ -50,8 +50,8 @@ public class ProductServlet extends HttpServlet {
         double size = Double.parseDouble(request.getParameter("size"));
         double price = Double.parseDouble(request.getParameter("price"));
 
-        if (name != null && description != null
-                && !name.isBlank() && !description.isBlank()) {
+        if (name != null && description != null && color != null && size > 0 && price > 0
+                && !name.isBlank() && !description.isBlank() && !color.isBlank()) {
 
             Product p = new Product();
             p.setName(name);
@@ -65,7 +65,7 @@ public class ProductServlet extends HttpServlet {
         }
 
         // Redirect to avoid form resubmission
-        response.sendRedirect(request.getContextPath() + "/product");
+        response.sendRedirect(request.getContextPath() + "/products");
     }
 }
 
