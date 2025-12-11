@@ -16,13 +16,17 @@ public class Product {
         this.size = size;
         this.price = price;
     }
-    
+
     public Product(int ID, String name, String color, double size, double price) {
         this.ID = ID;
         this.name = name;
         this.color = color;
         this.size = size;
         this.price = price;
+    }
+
+    public Product() {
+
     }
 
     public int getID() {
@@ -52,14 +56,30 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" + "ID=" + ID + ", name=" + name + ", description=" + description + ", color=" + color + ", size=" + size + ", price=" + price + '}';
-    }   
+    }
 
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
 }
