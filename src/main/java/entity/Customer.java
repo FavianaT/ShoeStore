@@ -13,13 +13,14 @@ public class Customer
     private int ID;
     private String firstName;
     private String lastName;
+    private String favoriteMeal;
     
-    public Customer(int ID, String firstName, String lastName)
+    public Customer(int ID, String firstName, String lastName, String favoriteMeal)
     {
         this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
-
+        this.favoriteMeal = favoriteMeal;
     }
 
     public Customer(int ID, String firstName)
@@ -29,6 +30,7 @@ public class Customer
     }
 
     public Customer() {
+
     }
 
     public int getID() {
@@ -43,9 +45,13 @@ public class Customer
         return lastName;
     }
 
+    public String getFavoriteMeal() {
+        return favoriteMeal;
+    }
+
     @Override
     public String toString() {
-        return "Customer{" + "ID=" + ID + ", firstName=" + firstName + ", lastName=" + lastName + '}';
+        return "Customer{" + "ID=" + ID + ", firstName=" + firstName + ", lastName=" + lastName + ", favoriteMeal=" + favoriteMeal + '}';
     }
 
     public void setFirstName(String firstName) {
@@ -55,6 +61,8 @@ public class Customer
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public void setFavoriteMeal(String favoriteMeal) {
+        this.favoriteMeal = favoriteMeal;
+    }
 }
-
-
