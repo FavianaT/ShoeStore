@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/products")
 public class ProductServlet extends HttpServlet {
@@ -20,7 +21,6 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // use your existing DAO
         productDAO = new ProductDAO();
     }
 
@@ -29,13 +29,38 @@ public class ProductServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get all products from the DB via DAO
-        List<Product> product = productDAO.getAll();
-        request.setAttribute("product", product);
+        String action = request.getParameter("action");
+        if (action == null || action.isBlank() || action.equals("read")) {
+            // Show product list
+            List<Product> products = productDAO.getAll();
+            request.setAttribute("products", products);
+            RequestDispatcher rd = request.getRequestDispatcher("/product_read.jsp");
+            rd.forward(request, response);
+            return;
+        }
 
-        // Forward to JSP
-        RequestDispatcher rd = request.getRequestDispatcher("/products.jsp");
-        rd.forward(request, response);
+        if ("edit".equals(action)) {
+            // Load single product and forward to update page (prefilled form)
+            String idStr = request.getParameter("id");
+            try {
+                int id = Integer.parseInt(idStr);
+                Optional<Product> opt = productDAO.get(id);
+                Product product = (opt == null) ? null : opt.orElse(null);
+                if (product != null) {
+                    request.setAttribute("product", product);
+                } else {
+                    request.setAttribute("error", "Product with ID " + id + " not found.");
+                }
+            } catch (NumberFormatException ex) {
+                request.setAttribute("error", "Invalid product id.");
+            }
+            RequestDispatcher rd = request.getRequestDispatcher("/product_update.jsp");
+            rd.forward(request, response);
+            return;
+        }
+
+        // Unknown GET action -> redirect to list
+        response.sendRedirect(request.getContextPath() + "/products?action=read");
     }
 
     @Override
@@ -43,29 +68,77 @@ public class ProductServlet extends HttpServlet {
                           HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Simple “create” operation
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-        String color = request.getParameter("color");
-        double size = Double.parseDouble(request.getParameter("size"));
-        double price = Double.parseDouble(request.getParameter("price"));
+        String action = request.getParameter("action");
+        if (action == null) action = "";
 
-        if (name != null && description != null && color != null && size > 0 && price > 0
-                && !name.isBlank() && !description.isBlank() && !color.isBlank()) {
-
-            Product p = new Product();
-            p.setName(name);
-            p.setDescription(description);
-            p.setColor(color);
-            p.setSize(size);
-            p.setPrice(price);
-
-
-            productDAO.insert(p);    // uses your existing DAO
+        switch (action) {
+            case "create":
+                handleCreate(request);
+                break;
+            case "update":
+                handleUpdate(request);
+                break;
+            case "delete":
+                handleDelete(request);
+                break;
+            default:
+                // if no action, treat as create (backwards compatible) or redirect
+                handleCreate(request);
+                break;
         }
 
-        // Redirect to avoid form resubmission
-        response.sendRedirect(request.getContextPath() + "/products");
+        // After any POST operation, redirect to product list to avoid resubmission
+        response.sendRedirect(request.getContextPath() + "/products?action=read");
+    }
+
+    private void handleCreate(HttpServletRequest request) {
+        String Name = request.getParameter("Name");
+        String Description = request.getParameter("Description");
+        String Color = request.getParameter("Color");
+        Double Size = Double.parseDouble(request.getParameter("Size"));
+        Double Price = Double.parseDouble(request.getParameter("Price"));
+
+        if (Name != null && Description != null && Color != null && Size > 0 && Price > 0
+                && !Name.isBlank() && !Description.isBlank() && !Color.isBlank()) {
+            try {
+                Product product = new Product(0, Name, Description, Color, Size, Price);
+                productDAO.insert(product);
+            } catch (NumberFormatException ex) {
+                System.err.println("Price parse error: " + ex.getMessage());
+            }
+        }
+    }
+
+    private void handleUpdate(HttpServletRequest request) {
+        String idStr = request.getParameter("ID");
+        String Name = request.getParameter("Name");
+        String Description = request.getParameter("Description");
+        String Color = request.getParameter("Color");
+        Double Size = Double.parseDouble(request.getParameter("Size"));
+        Double Price = Double.parseDouble(request.getParameter("Price"));
+
+        try {
+            int id = Integer.parseInt(idStr);
+            Product product = new Product(id, Name, Description, Color, Size, Price);
+            productDAO.update(product);
+        } catch (NumberFormatException ex) {
+            System.err.println("Update parse error: " + ex.getMessage());
+        }
+    }
+
+    private void handleDelete(HttpServletRequest request) {
+        String idStr = request.getParameter("ID");
+        try {
+            int id = Integer.parseInt(idStr);
+            Optional<Product> opt = productDAO.get(id);
+            Product product = (opt == null) ? null : opt.orElse(null);
+            if (product != null) {
+                productDAO.delete(product);
+            } else {
+                System.err.println("Product to delete not found: " + id);
+            }
+        } catch (NumberFormatException ex) {
+            System.err.println("Delete parse error: " + ex.getMessage());
+        }
     }
 }
-
