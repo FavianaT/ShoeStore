@@ -57,5 +57,12 @@
     <input type="submit" value="Save Product" />
 </form>
 
+<a href="products_update.jsp">Update Product</a>
+<br><br/>
+<a href="products_read.jsp">Read Product</a>
+<br><br/>
+<a href="products_delete.jsp">Delete Product</a>
+
+
 </body>
 </html>
