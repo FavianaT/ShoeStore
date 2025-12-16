@@ -16,6 +16,9 @@
 <p>You are now logged in.</p>
 
 <a href="sneaker.jsp">Order Sneakers</a>
+<br></br>
+<a href="products.jsp">Create Products</a>
+<br></br>
 <a href="logout">Logout</a>
 
 </body>
