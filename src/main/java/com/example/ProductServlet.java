@@ -69,7 +69,9 @@ public class ProductServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null) { 
+            action = "";
+        }
 
         switch (action) {
             case "create":
@@ -82,12 +84,10 @@ public class ProductServlet extends HttpServlet {
                 handleDelete(request);
                 break;
             default:
-                // if no action, treat as create (backwards compatible) or redirect
                 handleCreate(request);
                 break;
         }
 
-        // After any POST operation, redirect to product list to avoid resubmission
         response.sendRedirect(request.getContextPath() + "/products?action=read");
     }
 
@@ -98,14 +98,17 @@ public class ProductServlet extends HttpServlet {
         Double Size = Double.parseDouble(request.getParameter("Size"));
         Double Price = Double.parseDouble(request.getParameter("Price"));
 
+
         if (Name != null && Description != null && Color != null && Size > 0 && Price > 0
                 && !Name.isBlank() && !Description.isBlank() && !Color.isBlank()) {
-            try {
-                Product product = new Product(0, Name, Description, Color, Size, Price);
-                productDAO.insert(product);
-            } catch (NumberFormatException ex) {
-                System.err.println("Price parse error: " + ex.getMessage());
-            }
+
+            Product p = new Product();
+            p.setName(Name);
+            p.setDescription(Description);
+            p.setColor(Color);
+            p.setSize(Size);
+            p.setPrice(Price);
+            productDAO.insert(p);
         }
     }
 
@@ -119,8 +122,14 @@ public class ProductServlet extends HttpServlet {
 
         try {
             int id = Integer.parseInt(idStr);
-            Product product = new Product(id, Name, Description, Color, Size, Price);
-            productDAO.update(product);
+            Product p = new Product();
+            p.setName(Name);
+            p.setDescription(Description);
+            p.setColor(Color);
+            p.setSize(Size);
+            p.setPrice(Price);
+            p.setID(id);
+            productDAO.update(p);
         } catch (NumberFormatException ex) {
             System.err.println("Update parse error: " + ex.getMessage());
         }
