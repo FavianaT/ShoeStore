@@ -17,7 +17,6 @@
         <th>Color</th>
         <th>Size</th>
         <th>Price</th>
-        <th>Actions</th>
     </tr>
 
     <c:forEach var="prod" items="${products}">
