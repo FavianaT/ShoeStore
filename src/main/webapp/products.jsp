@@ -34,6 +34,7 @@
 
 <h2>Add New Product</h2>
 <form action="${pageContext.request.contextPath}/products" method="post">
+    <input type="hidden" name="action" value ="create">
     <label>Name:
         <input type="text" name="name"/>
     </label><br/><br/>
