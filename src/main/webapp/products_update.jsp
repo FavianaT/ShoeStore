@@ -35,6 +35,7 @@
 <h2>Update Existing Product</h2>
 
 <form action="${pageContext.request.contextPath}/products.jsp" method="post">
+    <input type="hidden" name="action" value ="update">
 
     <label>ID:
         <input type="number" name="id" required />
