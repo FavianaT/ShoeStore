@@ -7,10 +7,7 @@ package entity;
 
 import core.DB;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,14 +83,16 @@ public class ProductDAO implements DAO<Product>
     {
         DB db = DB.getInstance();
         try {
-            String sql = "INSERT INTO SS_Product(Product_ID, Product_Name, Product_Description, Product_Color, Product_Size, Product_Price) VALUES (?, ?, ?, ?, ?, ?)";
+
+            String sql = "INSERT INTO SS_Product(Product_Name, Product_Description, Product_Color, Product_Size, Product_Price) " +
+                    "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = db.getPreparedStatement(sql);
-            stmt.setInt(1, product.getID());
-            stmt.setString(2, product.getName());
-            stmt.setString(3, product.getDescription());
-            stmt.setString(4, product.getColor());
-            stmt.setDouble(5, product.getSize());
-            stmt.setDouble(6, product.getPrice());
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setString(3, product.getColor());
+            stmt.setDouble(4, product.getSize());
+            stmt.setDouble(4, product.getPrice());
+            stmt.executeUpdate();
             int rowInserted = stmt.executeUpdate();
             if (rowInserted > 0) {
                 System.out.println("A new product was inserted successfully!");
